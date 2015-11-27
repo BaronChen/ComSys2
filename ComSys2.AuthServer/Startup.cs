@@ -4,10 +4,14 @@ using System.Linq;
 using System.Web;
 using ComSys2.AuthServer.IdentityServerConfig;
 using ComSys2.AuthServer.IdentityServerConfig.ManageServices;
+using IdentityManager.AspNetIdentity;
 using IdentityManager.Configuration;
 using IdentityManager.Core.Logging;
 using IdentityManager.Logging;
 using IdentityServer3.Core.Configuration;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
 using Owin;
 
 namespace ComSys2.AuthServer
@@ -16,6 +20,12 @@ namespace ComSys2.AuthServer
 	{
 		public void Configuration(IAppBuilder app)
 		{
+			app.UseCookieAuthentication(new CookieAuthenticationOptions()
+			{
+				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+				LoginPath = new PathString("/home/login")
+			});
+
 			app.Map("/admin", adminApp =>
 			{
 				var factory = new IdentityManagerServiceFactory();
@@ -23,7 +33,14 @@ namespace ComSys2.AuthServer
 
 				adminApp.UseIdentityManager(new IdentityManagerOptions()
 				{
-					Factory = factory
+					Factory = factory,
+					SecurityConfiguration = new HostSecurityConfiguration()
+					{
+						HostAuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+						NameClaimType = "name",
+						RoleClaimType = "role",
+						AdminRoleName = "Admin"
+					}
 				});
 			});
 

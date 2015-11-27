@@ -1,0 +1,23 @@
+﻿@model dynamic
+
+@{
+	ViewBag.Title = "Login";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Login</h2>
+
+
+@using (Html.BeginForm())
+{
+	<div>
+		@Html.Label("User Name")
+		@Html.TextBox("username")
+	</div>
+
+	<div>
+		@Html.Label("password")
+		@Html.Password("password")
+	</div>
+	<div><button>Login</button></div>
+}

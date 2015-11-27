@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using IdentityServer3.Core;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
@@ -22,8 +23,8 @@ namespace WebHost.IdSvr
 					},
 
                     // server to server communication
-                    Flow = Flows.ClientCredentials,
-
+                    Flow = Flows.ResourceOwner,
+					AccessTokenType = AccessTokenType.Reference,
                     // only allowed to access api1
                     AllowedScopes = new List<string>
 					{

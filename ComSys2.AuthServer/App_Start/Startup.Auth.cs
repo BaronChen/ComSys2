@@ -16,7 +16,9 @@ namespace ComSys2.AuthServer
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(AuthDbContext.Create);
             app.CreatePerOwinContext<UserManager>(UserManager.Create);
+			app.CreatePerOwinContext<SignInManager>(SignInManager.Create);
 
-        }
-    }
+
+		}
+	}
 }

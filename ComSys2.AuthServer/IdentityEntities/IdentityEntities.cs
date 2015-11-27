@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using IdSvr3 = IdentityServer3.Core;
 
 namespace ComSys2.AuthServer.IdentityEntities
@@ -15,10 +16,10 @@ namespace ComSys2.AuthServer.IdentityEntities
 		public string LastName { get; set; }
 
 
-		public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager, string authenticationType)
+		public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager manager)
 		{
 			// Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-			var userIdentity = await manager.CreateIdentityAsync(this, authenticationType);
+			var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
 			// Add custom user claims here
 			return userIdentity;
 		}
@@ -85,6 +86,24 @@ namespace ComSys2.AuthServer.IdentityEntities
 				manager.UserTokenProvider = new DataProtectorTokenProvider<User>(dataProtectionProvider.Create("ComSys Identity"));
 			}
 			return manager;
+		}
+	}
+
+	public class SignInManager : SignInManager<User, string>
+	{
+		public SignInManager(UserManager userManager, IAuthenticationManager authenticationManager)
+			: base(userManager, authenticationManager)
+		{
+		}
+
+		public override Task<ClaimsIdentity> CreateUserIdentityAsync(User user)
+		{
+			return user.GenerateUserIdentityAsync((UserManager)UserManager);
+		}
+
+		public static SignInManager Create(IdentityFactoryOptions<SignInManager> options, IOwinContext context)
+		{
+			return new SignInManager(context.GetUserManager<UserManager>(), context.Authentication);
 		}
 	}
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using IdentityManager;
 using IdentityServer3.Core.Models;
 
 namespace ComSys2.AuthServer.IdentityServerConfig
@@ -24,7 +25,7 @@ namespace ComSys2.AuthServer.IdentityServerConfig
 
 					Claims = new List<ScopeClaim>
 					{
-						new ScopeClaim("role")
+						new ScopeClaim(Constants.ClaimTypes.Role)
 					}
 				},
 				new Scope
@@ -35,7 +36,7 @@ namespace ComSys2.AuthServer.IdentityServerConfig
 
 					Claims = new List<ScopeClaim>
 					{
-						new ScopeClaim("role")
+						new ScopeClaim(Constants.ClaimTypes.Role)
 					}
 				}
 			};
